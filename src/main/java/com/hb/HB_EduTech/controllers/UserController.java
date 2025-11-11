@@ -13,42 +13,62 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class UserController {
 
     @Autowired
-    private UserInfoRepository userInfoRepository;
-
-    @Autowired
-    private JWTHelper jwtHelper;
-
-    @Autowired
     private AuthenticationManager authenticationManager;
-
-    @Autowired
-    private PasswordEncoder encoder;
 
     @Autowired
     UserService userService;
 
+    @Autowired
+    private UserInfoRepository userInfoRepository;
+
     @PostMapping(value = "/saveUser")
     public ResponseEntity<ResponseDto> saveUser(@RequestBody User user) {
-        return ResponseEntity.ok().body(new ResponseDto(200, "Login Successfull", userService.addUser(user)));
+        try {
+            return ResponseEntity.ok().body(new ResponseDto(200, "Student Created Successfully", userService.saveUser(user)));
+        } catch (Exception e){
+            return ResponseEntity.internalServerError().body(new ResponseDto(500, e.getMessage()));
+        }
+    }
+
+    @GetMapping("/getUser")
+    public ResponseEntity<ResponseDto> getUser(@RequestParam String username) {
+        try {
+            return ResponseEntity.ok().body(new ResponseDto(200, "User Data", userInfoRepository.findByUsername(username)));
+        } catch (Exception e){
+            return ResponseEntity.internalServerError().body(new ResponseDto(500, e.getMessage()));
+        }
     }
 
     @PostMapping("/generateToken")
-    public ResponseEntity<ResponseDto> authenticateAndGetToken(@RequestBody JwtRequest jwtRequest) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(jwtRequest.getUsername(), jwtRequest.getPassword())
-        );
-        if (authentication.isAuthenticated()) {
-            return ResponseEntity.ok().body(new ResponseDto(200, "Login Successfull", jwtHelper.generateToken(jwtRequest.getUsername())));
-        } else {
-            return ResponseEntity.ok().body(new ResponseDto(200, "Invalid Credentials"));
+    public ResponseEntity<ResponseDto> generateToken(@RequestBody JwtRequest jwtRequest) {
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(jwtRequest.getUsername(), jwtRequest.getPassword())
+            );
+            if (authentication.isAuthenticated()) {
+                return ResponseEntity.ok().body(new ResponseDto(200, "Login Successful", userService.generateToken(jwtRequest.getUsername())));
+            } else {
+                return ResponseEntity.ok().body(new ResponseDto(200, "Invalid Credentials"));
+            }
+        } catch (Exception e){
+            return ResponseEntity.internalServerError().body(new ResponseDto(500, e.getMessage()));
+        }
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<ResponseDto> logout(@RequestParam String username) {
+        try {
+            System.out.println("********************"+username);
+            userService.logout(username);
+            return ResponseEntity.ok().body(new ResponseDto(200, "Logout Successful"));
+        } catch (Exception e){
+            return ResponseEntity.internalServerError().body(new ResponseDto(500, e.getMessage()));
         }
     }
 

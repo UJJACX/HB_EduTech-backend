@@ -17,9 +17,10 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int userId;
-    private String name;
+    private String username;
     private String email;
     private String password;
+    private String token;
 
     @ManyToOne
     @JoinColumn(name = "role_id")
@@ -36,12 +37,12 @@ public class User {
         this.userId = userId;
     }
 
-    public String getName() {
-        return name;
+    public String getUsername() {
+        return username;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getEmail() {
@@ -82,5 +83,13 @@ public class User {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }
