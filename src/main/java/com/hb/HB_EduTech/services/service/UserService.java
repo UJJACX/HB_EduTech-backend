@@ -2,8 +2,8 @@ package com.hb.HB_EduTech.services.service;
 
 
 import com.hb.HB_EduTech.entities.User;
-import com.hb.HB_EduTech.models.EnrollmentFormDto;
-import com.hb.HB_EduTech.repositories.UserInfoRepository;
+import com.hb.HB_EduTech.models.AuthResponse;
+import com.hb.HB_EduTech.repositories.UserRepo;
 import com.hb.HB_EduTech.security.JWTHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,7 +18,7 @@ import java.util.Optional;
 public class UserService implements UserDetailsService {
 
     @Autowired
-    private UserInfoRepository repository;
+    private UserRepo repository;
 
     @Autowired
     private PasswordEncoder encoder;
@@ -40,17 +40,17 @@ public class UserService implements UserDetailsService {
         return "User Added Successfully";
     }
 
-    public String generateToken (String username){
+    public AuthResponse generateToken (String username){
         String token = jwtHelper.generateToken(username);
         Optional<User> user = repository.findByUsername(username);
         user.get().setToken(token);
         repository.save(user.get());
-        return token;
+
+        return new AuthResponse(token, username, user.get().getRole().getRoleName());
     }
 
 
     public void logout(String username) {
-        System.out.println(username);
         Optional<User> user = repository.findByUsername(username);
         user.get().setToken(null);
         repository.save(user.get());

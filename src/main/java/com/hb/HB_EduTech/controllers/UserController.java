@@ -1,18 +1,15 @@
 package com.hb.HB_EduTech.controllers;
 
 import com.hb.HB_EduTech.entities.User;
-import com.hb.HB_EduTech.models.JwtRequest;
+import com.hb.HB_EduTech.models.AuthtRequest;
 import com.hb.HB_EduTech.models.ResponseDto;
-import com.hb.HB_EduTech.repositories.UserInfoRepository;
-import com.hb.HB_EduTech.security.JWTHelper;
+import com.hb.HB_EduTech.repositories.UserRepo;
 import com.hb.HB_EduTech.services.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -25,7 +22,7 @@ public class UserController {
     UserService userService;
 
     @Autowired
-    private UserInfoRepository userInfoRepository;
+    private UserRepo userInfoRepository;
 
     @PostMapping(value = "/saveUser")
     public ResponseEntity<ResponseDto> saveUser(@RequestBody User user) {
@@ -46,13 +43,13 @@ public class UserController {
     }
 
     @PostMapping("/generateToken")
-    public ResponseEntity<ResponseDto> generateToken(@RequestBody JwtRequest jwtRequest) {
+    public ResponseEntity<ResponseDto> generateToken(@RequestBody AuthtRequest request) {
         try {
             Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(jwtRequest.getUsername(), jwtRequest.getPassword())
+                    new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
             );
             if (authentication.isAuthenticated()) {
-                return ResponseEntity.ok().body(new ResponseDto(200, "Login Successful", userService.generateToken(jwtRequest.getUsername())));
+                return ResponseEntity.ok().body(new ResponseDto(200, "Login Successful", userService.generateToken(request.getUsername())));
             } else {
                 return ResponseEntity.ok().body(new ResponseDto(200, "Invalid Credentials"));
             }
@@ -61,10 +58,9 @@ public class UserController {
         }
     }
 
-    @PostMapping("/logout")
+    @PostMapping("/logoutStudent")
     public ResponseEntity<ResponseDto> logout(@RequestParam String username) {
         try {
-            System.out.println("********************"+username);
             userService.logout(username);
             return ResponseEntity.ok().body(new ResponseDto(200, "Logout Successful"));
         } catch (Exception e){

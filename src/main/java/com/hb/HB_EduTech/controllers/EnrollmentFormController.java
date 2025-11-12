@@ -5,9 +5,11 @@ import com.hb.HB_EduTech.models.ResponseDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping(value = "/enrollment")
 public class EnrollmentFormController {
 
     @PostMapping(value = "enrollStudent")
