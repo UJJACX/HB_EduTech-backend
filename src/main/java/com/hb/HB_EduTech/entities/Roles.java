@@ -14,6 +14,7 @@ public class Roles {
 
     @Id
     private int roleId;
+
     private String roleName;
 
     public int getRoleId() {

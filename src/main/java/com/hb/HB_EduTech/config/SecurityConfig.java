@@ -2,6 +2,7 @@ package com.hb.HB_EduTech.config;
 
 import com.hb.HB_EduTech.security.JWTAuthenticationFilter;
 import com.hb.HB_EduTech.services.service.UserService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -87,5 +88,20 @@ public class SecurityConfig {
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
+    }
+
+    @Bean
+    public ModelMapper modelMapper() {
+        ModelMapper mapper = new ModelMapper();
+
+        mapper.getConfiguration()
+                .setPropertyCondition(context -> {
+                    Object value = context.getSource();
+                    if (value == null) return false;
+                    if (value instanceof String && ((String) value).isBlank()) return false;
+                    return true;
+                });
+
+        return mapper;
     }
 }

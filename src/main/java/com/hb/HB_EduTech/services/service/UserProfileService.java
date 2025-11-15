@@ -12,5 +12,5 @@ public interface UserProfileService  {
 
     public Optional<UserProfile> getUserProfile(int user_id);
 
-    public String updateProfile(UserProfileDto userProfileDto, int profile_id);
+    public String updateProfile(UserProfileDto userProfileDto);
 }

@@ -60,9 +60,9 @@ public class UserProfileController {
 
 
     @PutMapping("/update-profile")
-    public ResponseEntity<ResponseDto> updateUserProfile(@RequestBody UserProfileDto userProfileDto, @RequestParam int profile_id){
+    public ResponseEntity<ResponseDto> updateUserProfile(@RequestBody UserProfileDto userProfileDto){
         try{
-            return ResponseEntity.ok().body(new ResponseDto(200, userProfileService.updateProfile(userProfileDto, profile_id)));
+            return ResponseEntity.ok().body(new ResponseDto(200, userProfileService.updateProfile(userProfileDto)));
         }catch (Exception e){
 
         }

@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.util.Date;
 
 public class UserProfileDto {
-    private int profile_id;
     private String firstName;
     private String middleName;
     private String lastName;
@@ -22,14 +21,6 @@ public class UserProfileDto {
     private Double percentage;
     private Date year;
     private int userId;
-
-    public int getProfile_id() {
-        return profile_id;
-    }
-
-    public void setProfile_id(int profile_id) {
-        this.profile_id = profile_id;
-    }
 
     public String getFirstName() {
         return firstName;

@@ -3,8 +3,10 @@ package com.hb.HB_EduTech.controllers;
 import com.hb.HB_EduTech.entities.User;
 import com.hb.HB_EduTech.models.AuthtRequest;
 import com.hb.HB_EduTech.models.ResponseDto;
+import com.hb.HB_EduTech.models.UserDto;
 import com.hb.HB_EduTech.repositories.UserRepo;
 import com.hb.HB_EduTech.services.service.UserService;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -27,7 +29,7 @@ public class UserController {
     @PostMapping(value = "/saveUser")
     public ResponseEntity<ResponseDto> saveUser(@RequestBody User user) {
         try {
-            return ResponseEntity.ok().body(new ResponseDto(200, "Student Created Successfully", userService.saveUser(user)));
+            return ResponseEntity.ok().body(new ResponseDto(200, userService.saveUser(user)));
         } catch (Exception e){
             return ResponseEntity.internalServerError().body(new ResponseDto(500, e.getMessage()));
         }
@@ -59,10 +61,28 @@ public class UserController {
     }
 
     @PostMapping("/logoutStudent")
-    public ResponseEntity<ResponseDto> logout(@RequestParam String username) {
+    public ResponseEntity<ResponseDto> logout(@RequestBody UserDto userData) {
         try {
-            userService.logout(username);
+            userService.logout(userData);
             return ResponseEntity.ok().body(new ResponseDto(200, "Logout Successful"));
+        } catch (Exception e){
+            return ResponseEntity.internalServerError().body(new ResponseDto(500, e.getMessage()));
+        }
+    }
+
+    @DeleteMapping("/delete-Student")
+    public ResponseEntity<ResponseDto> deleteStudent(@RequestBody UserDto userData) {
+        try {
+            return ResponseEntity.ok().body(new ResponseDto(200, userService.deleteStudent(userData)));
+        } catch (Exception e){
+            return ResponseEntity.internalServerError().body(new ResponseDto(500, e.getMessage()));
+        }
+    }
+
+    @PutMapping("/update-Student")
+    public ResponseEntity<ResponseDto> updateStudent(@RequestBody UserDto userDto) {
+        try {
+            return ResponseEntity.ok().body(new ResponseDto(200, userService.updateStudent(userDto)));
         } catch (Exception e){
             return ResponseEntity.internalServerError().body(new ResponseDto(500, e.getMessage()));
         }
