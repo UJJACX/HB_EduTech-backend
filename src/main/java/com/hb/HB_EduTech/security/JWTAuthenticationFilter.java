@@ -61,6 +61,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
             // Continue the filter chain
             filterChain.doFilter(request, response);
         } catch (Exception e) {
+            e.printStackTrace();
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401
             response.getWriter().write("Token expired");
             return;

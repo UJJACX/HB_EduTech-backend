@@ -1,29 +1,23 @@
 package com.hb.HB_EduTech.entities;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import java.util.ArrayList;
+import lombok.*;
 import java.util.List;
-
 @Entity
-@Table(name = "college_master")
 public class College {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "college_code")
-    private String collegeCode;
-
-    @Column(name = "college_name")
     private String collegeName;
-
+    private String collegeCode;
     private String status;
-
-    @Column(name = "home_university")
     private String homeUniversity;
+    private String round;
 
+    @OneToMany(mappedBy = "college", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Branch> branches;
 
     public Long getId() {
         return id;
@@ -33,20 +27,20 @@ public class College {
         this.id = id;
     }
 
-    public String getCollegeCode() {
-        return collegeCode;
-    }
-
-    public void setCollegeCode(String collegeCode) {
-        this.collegeCode = collegeCode;
-    }
-
     public String getCollegeName() {
         return collegeName;
     }
 
     public void setCollegeName(String collegeName) {
         this.collegeName = collegeName;
+    }
+
+    public String getCollegeCode() {
+        return collegeCode;
+    }
+
+    public void setCollegeCode(String collegeCode) {
+        this.collegeCode = collegeCode;
     }
 
     public String getStatus() {
@@ -65,4 +59,19 @@ public class College {
         this.homeUniversity = homeUniversity;
     }
 
+    public List<Branch> getBranches() {
+        return branches;
+    }
+
+    public void setBranches(List<Branch> branches) {
+        this.branches = branches;
+    }
+
+    public String getRound() {
+        return round;
+    }
+
+    public void setRound(String round) {
+        this.round = round;
+    }
 }
